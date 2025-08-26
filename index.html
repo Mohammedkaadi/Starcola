@@ -1,461 +1,262 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<!DOCTYPE html><html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>نظام توزيع كولا مع صفحات</title>
-  <style>
-    /* -- أساسي كما في السابق مع بعض الإضافات -- */
-    * {
-      box-sizing: border-box;
-    }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f0f4f8;
-      margin: 0;
-      padding: 5px 10px 10px;
-      color: #333;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .container {
-      max-width: 980px;
-      width: 100%;
-      background: #fff;
-      margin: 10px auto 20px;
-      border-radius: 10px;
-      padding: 10px 15px;
-      box-shadow: 0 6px 18px rgb(0 0 0 / 0.1);
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    h1, h2 {
-      text-align: center;
-      color: #0366d6;
-      margin: 0 0 6px 0;
-      font-weight: 700;
-      user-select: none;
-      line-height: 1.2;
-    }
-    button {
-      background-color: #0366d6;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      padding: 8px 15px;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      user-select: none;
-      width: 100%;
-    }
-    button:hover {
-      background-color: #024ea2;
-    }
-    button:disabled {
-      background-color: #a3bffa;
-      cursor: default;
-    }
-    label {
-      font-weight: 600;
-      margin-bottom: 4px;
-      display: block;
-      user-select: none;
-      font-size: 0.9rem;
-    }
-    select, input[type=number] {
-      width: 100%;
-      padding: 6px 8px;
-      border-radius: 6px;
-      border: 1.5px solid #ddd;
-      font-size: 0.95rem;
-      transition: border-color 0.3s ease;
-      user-select: text;
-    }
-    select:focus, input[type=number]:focus {
-      outline: none;
-      border-color: #0366d6;
-      box-shadow: 0 0 6px rgba(3, 102, 214, 0.4);
-    }
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      box-shadow: 0 0 4px rgb(0 0 0 / 0.05);
-      border-radius: 10px;
-      overflow: hidden;
-      user-select: none;
-      font-size: 0.9rem;
-    }
-    th, td {
-      padding: 8px 6px;
-      text-align: center;
-    }
-    th {
-      background-color: #0366d6;
-      color: white;
-      font-weight: 700;
-      user-select: none;
-    }
-    tbody tr:nth-child(even) {
-      background-color: #f9fbfd;
-    }
-    tbody tr:hover {
-      background-color: #e1ecfb;
-    }
-    .delete-btn {
-      background-color: #d93025;
-      color: white;
-      border: none;
-      padding: 4px 10px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: background-color 0.3s ease;
-      user-select: none;
-      font-size: 0.85rem;
-    }
-    .delete-btn:hover {
-      background-color: #a52714;
-    }
-    .form-group {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px 15px;
-      align-items: flex-end;
-    }
-    .form-group.single {
-      grid-template-columns: 1fr;
-    }
-    @media (max-width: 600px) {
-      .form-group {
-        grid-template-columns: 1fr !important;
-      }
-      button {
-        width: 100% !important;
-      }
-    }
-    .summary {
-      margin-top: 10px;
-      background: #d9f7be;
-      color: #3b7a00;
-      padding: 10px;
-      font-weight: 700;
-      font-size: 1rem;
-      border-radius: 8px;
-      text-align: center;
-      user-select: none;
-      box-shadow: inset 0 0 6px rgba(59, 122, 0, 0.3);
-    }
-    /* إضافة خاصية إخفاء الصفحات */
-    .page {
-      display: none;
-      width: 100%;
-      max-width: 980px;
-      margin: 10px auto 20px;
-      background: #fff;
-      border-radius: 10px;
-      padding: 10px 15px;
-      box-shadow: 0 6px 18px rgb(0 0 0 / 0.1);
-      flex-direction: column;
-      gap: 12px;
-    }
-    .page.active {
-      display: flex;
-    }
-    /* زر التنقل الرئيسي */
-    #mainNav {
-      width: 980px;
-      max-width: 100%;
-      margin: 20px auto 0;
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      user-select: none;
-    }
-    #mainNav button {
-      width: auto;
-      padding: 10px 20px;
-      font-weight: 700;
-      border-radius: 12px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نظام توزيع كولا مطور</title>
+<style>
+* { box-sizing: border-box; margin:0; padding:0; }
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f0f4ff, #e0f7fa);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    color: #333;
+}
+header {
+    width: 100%;
+    background: linear-gradient(90deg, #0366d6, #58a6ff);
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+nav {
+    margin: 20px 0;
+    display: flex;
+    gap: 15px;
+}
+nav button {
+    padding: 12px 25px;
+    font-weight: 700;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(90deg, #0366d6, #58a6ff);
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+nav button:hover, nav button.active {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+.container {
+    width: 95%;
+    max-width: 1000px;
+    background: #fff;
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+h2 {
+    text-align: center;
+    color: #0366d6;
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+}
+.form-group {
+    display: grid;
+    gap: 20px;
+}
+.form-group.columns {
+    grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+}
+label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    display: block;
+    color: #0366d6;
+}
+input, select {
+    padding: 10px;
+    border-radius: 12px;
+    border: 1.5px solid #ddd;
+    font-size: 1rem;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+input:focus, select:focus {
+    border-color: #0366d6;
+    outline: none;
+    box-shadow: 0 0 10px rgba(3,102,214,0.3);
+}
+button.action-btn {
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    background: linear-gradient(90deg, #0366d6, #58a6ff);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+}
+button.action-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    font-size: 0.95rem;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+}
+th, td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+th {
+    background: linear-gradient(90deg, #0366d6, #58a6ff);
+    color: #fff;
+}
+tr:nth-child(even) { background: #f4f7ff; }
+tr:hover { background: #dbe9ff; transform: scale(1.01); transition: all 0.2s ease; }
+.delete-btn {
+    background: #d93025;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+.delete-btn:hover { background: #a52714; transform: translateY(-2px); }
+.summary {
+    background: linear-gradient(90deg, #d9f7be, #a8e6a2);
+    padding: 15px;
+    font-weight: 700;
+    text-align: center;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    box-shadow: inset 0 0 10px rgba(59,122,0,0.3);
+}
+.hidden { display: none; }
+</style>
 </head>
 <body>
-  <!-- أزرار التنقل بين الصفحات -->
-  <nav id="mainNav" aria-label="التنقل الرئيسي">
-    <button id="homeBtn" aria-controls="homePage" aria-selected="true">الرئيسية</button>
-    <button id="sellBtn" aria-controls="sellPage" aria-selected="false">تسجيل بيع</button>
-  </nav>
+<header>لوحة تحكم توزيع كولا - مطور</header>
+<nav>
+<button id="homeBtn" class="active">الرئيسية</button>
+<button id="sellBtn">تسجيل بيع</button>
+</nav><section id="homePage" class="container">
+<h2>إضافة منتج إلى المخزون</h2>
+<div class="form-group columns">
+<div><label>الحجم</label><select id="size"><option>2 لتر</option><option>1 لتر</option><option>300 مل</option></select></div>
+<div><label>النكهة</label><select id="flavor"><option>تفاح</option><option>فواكه</option><option>برتقال</option><option>ليمون</option><option>أسود</option></select></div>
+<div><label>عدد الطرود</label><input type="number" id="qty" min="1" placeholder="مثلاً 5"></div>
+<div><label>سعر الشراء للطرد ($)</label><input type="number" id="cartonCost" min="0" step="0.01" placeholder="مثلاً 2.75"></div>
+<div><label>سعر البيع للطرد ($)</label><input type="number" id="cartonSellPrice" min="0" step="0.01" placeholder="مثلاً 3.25"></div>
+</div>
+<button class="action-btn" id="addProductBtn">إضافة المنتج</button>
+<h2>المخزون الحالي</h2>
+<table id="productTable"><thead><tr><th>الحجم</th><th>النكهة</th><th>عدد الطرود</th><th>سعر الشراء</th><th>سعر البيع</th><th>حذف</th></tr></thead><tbody></tbody></table>
+<h2>سجل المبيعات</h2>
+<table id="salesTable"><thead><tr><th>الحجم</th><th>النكهة</th><th>الكمية</th><th>إجمالي البيع</th><th>الربح</th><th>حذف</th></tr></thead><tbody></tbody></table>
+<div class="summary" id="profitSummary">إجمالي الربح: 0.00 $</div>
+</section><section id="sellPage" class="container hidden">
+<h2>تسجيل بيع</h2>
+<div class="form-group columns">
+<div><label>الحجم</label><select id="saleSize"><option>2 لتر</option><option>1 لتر</option><option>300 مل</option></select></div>
+<div><label>النكهة</label><select id="saleFlavor"><option>تفاح</option><option>فواكه</option><option>برتقال</option><option>ليمون</option><option>أسود</option></select></div>
+<div><label>الكمية المباعة</label><input type="number" id="saleQty" min="1" placeholder="مثلاً 2"></div>
+</div>
+<button class="action-btn" id="sellProductBtn">تأكيد البيع</button>
+<button class="action-btn" id="backHomeBtn" style="margin-top:10px; background:#6c757d;">عودة للرئيسية</button>
+</section><script>
+let products = JSON.parse(localStorage.getItem('products')) || [];
+let sales = JSON.parse(localStorage.getItem('sales')) || [];
 
-  <!-- الصفحة الرئيسية -->
-  <section id="homePage" class="page active" tabindex="0" aria-labelledby="homeTitle">
-    <h1 id="homeTitle">لوحة تحكم مركز توزيع كولا (حسب الطرود)</h1>
+function saveAll(){
+    localStorage.setItem('products', JSON.stringify(products));
+    localStorage.setItem('sales', JSON.stringify(sales));
+    renderTables();
+}
 
-    <section aria-labelledby="add-product-title">
-      <h2 id="add-product-title">إضافة منتج إلى المخزون</h2>
-      <div class="form-group">
-        <div>
-          <label for="size">الحجم:</label>
-          <select id="size" aria-required="true">
-            <option value="2 لتر">2 لتر</option>
-            <option value="1 لتر">1 لتر</option>
-            <option value="300 مل">300 مل</option>
-          </select>
-        </div>
-        <div>
-          <label for="flavor">النكهة:</label>
-          <select id="flavor" aria-required="true">
-            <option value="تفاح">تفاح</option>
-            <option value="فواكه">فواكه</option>
-            <option value="برتقال">برتقال</option>
-            <option value="ليمون">ليمون</option>
-            <option value="أسود">أسود</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-group">
-        <div>
-          <label for="qty">عدد الطرود:</label>
-          <input type="number" id="qty" min="1" aria-required="true" placeholder="مثلاً 5" />
-        </div>
-        <div>
-          <label for="cartonCost">سعر الشراء للطرد (دولار):</label>
-          <input type="number" id="cartonCost" step="0.01" min="0" aria-required="true" placeholder="مثلاً 2.75" />
-        </div>
-      </div>
-      <div class="form-group single">
-        <label for="cartonSellPrice">سعر البيع للطرد (دولار):</label>
-        <input type="number" id="cartonSellPrice" step="0.01" min="0" aria-required="true" placeholder="مثلاً 3.25" />
-      </div>
-      <button id="addProductBtn" type="button">إضافة المنتج</button>
-    </section>
+function addProduct(){
+    const size = document.getElementById('size').value;
+    const flavor = document.getElementById('flavor').value;
+    const qty = parseInt(document.getElementById('qty').value);
+    const cartonCost = parseFloat(document.getElementById('cartonCost').value);
+    const cartonSellPrice = parseFloat(document.getElementById('cartonSellPrice').value);
 
-    <section aria-labelledby="stock-title">
-      <h2 id="stock-title">المخزون الحالي</h2>
-      <table aria-describedby="stock-desc" role="grid" id="productTable">
-        <thead>
-          <tr>
-            <th scope="col">الحجم</th>
-            <th scope="col">النكهة</th>
-            <th scope="col">عدد الطرود</th>
-            <th scope="col">سعر الشراء للطرد ($)</th>
-            <th scope="col">سعر البيع للطرد ($)</th>
-            <th scope="col">حذف</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-      <p id="stock-desc" class="sr-only">جدول يعرض المنتجات المتوفرة في المخزون مع الأسعار والكمية</p>
-    </section>
+    if(!size || !flavor || !qty || qty < 1 || isNaN(cartonCost) || isNaN(cartonSellPrice)){
+        alert('يرجى إدخال جميع القيم بشكل صحيح');
+        return;
+    }
 
-    <section aria-labelledby="sales-title">
-      <h2 id="sales-title">سجل المبيعات</h2>
-      <table aria-describedby="sales-desc" role="grid" id="salesTable">
-        <thead>
-          <tr>
-            <th scope="col">الحجم</th>
-            <th scope="col">النكهة</th>
-            <th scope="col">الكمية المباعة</th>
-            <th scope="col">إجمالي البيع ($)</th>
-            <th scope="col">الربح ($)</th>
-            <th scope="col">حذف</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-      <p id="sales-desc" class="sr-only">جدول سجل المبيعات مع تفاصيل الربح</p>
-      <div class="summary" id="profitSummary">إجمالي الربح: 0.00 $</div>
-    </section>
-  </section>
+    const existing = products.find(p => p.size === size && p.flavor === flavor);
+    if(existing){
+        existing.qty += qty;
+        existing.cartonCost = cartonCost;
+        existing.cartonSellPrice = cartonSellPrice;
+    } else {
+        products.push({size, flavor, qty, cartonCost, cartonSellPrice});
+    }
 
-  <!-- صفحة تسجيل البيع فقط -->
-  <section id="sellPage" class="page" tabindex="0" aria-labelledby="sellTitle">
-    <h1 id="sellTitle">تسجيل بيع</h1>
-    <button id="backHomeBtn" type="button" style="width:auto; max-width:200px; margin:auto 0 15px;">عودة للرئيسية</button>
-    <div class="form-group">
-      <div>
-        <label for="saleSize">الحجم:</label>
-        <select id="saleSize" aria-required="true">
-          <option value="2 لتر">2 لتر</option>
-          <option value="1 لتر">1 لتر</option>
-          <option value="300 مل">300 مل</option>
-          </select>
-          </div>
-          <div>
-          <label for="saleFlavor">النكهة:</label>
-          <select id="saleFlavor" aria-required="true">
-          <option value="تفاح">تفاح</option>
-          <option value="فواكه">فواكه</option>
-          <option value="برتقال">برتقال</option>
-          <option value="ليمون">ليمون</option>
-          <option value="أسود">أسود</option>
-          </select>
-          </div>
-          </div>
-          <div class="form-group single">
-          <label for="saleQty">الكمية المباعة (عدد الطرود):</label>
-          <input type="number" id="saleQty" min="1" aria-required="true" placeholder="مثلاً 2" />
-          </div>
-          <button id="sellProductBtn" type="button">تأكيد البيع</button>
-          </section>
-          
-          <script>
-          // البيانات من التخزين المحلي
-          let products = JSON.parse(localStorage.getItem('products')) || [];
-          let sales = JSON.parse(localStorage.getItem('sales')) || [];
-          
-          // حفظ كل شيء للتخزين المحلي
-          function saveAll() {
-          localStorage.setItem('products', JSON.stringify(products));
-          localStorage.setItem('sales', JSON.stringify(sales));
-          renderTables();
-          }
-          
-          // إضافة منتج جديد أو تحديث الكمية والأسعار
-          function addProduct() {
-          const size = document.getElementById('size').value;
-          const flavor = document.getElementById('flavor').value;
-          const qty = parseInt(document.getElementById('qty').value);
-          const cartonCost = parseFloat(document.getElementById('cartonCost').value);
-          const cartonSellPrice = parseFloat(document.getElementById('cartonSellPrice').value);
-          if (!qty || qty < 1 || isNaN(cartonCost) || isNaN(cartonSellPrice) || cartonCost < 0 || cartonSellPrice < 0) {
-          alert("يرجى إدخال جميع القيم بشكل صحيح");
-          return;
-          }
-          const existing = products.find(p => p.size === size && p.flavor === flavor);
-          if (existing) {
-          existing.qty += qty;
-          existing.cartonCost = cartonCost;
-          existing.cartonSellPrice = cartonSellPrice;
-          } else {
-          products.push({ size, flavor, qty, cartonCost, cartonSellPrice });
-          }
-          document.getElementById('qty').value = '';
-          document.getElementById('cartonCost').value = '';
-          document.getElementById('cartonSellPrice').value = '';
-          saveAll();
-          }
-          
-          // تسجيل بيع
-          function sellProduct() {
-          const size = document.getElementById('saleSize').value;
-          const flavor = document.getElementById('saleFlavor').value;
-          const saleQty = parseInt(document.getElementById('saleQty').value);
-          if (!saleQty || saleQty < 1) {
-          alert("يرجى إدخال كمية البيع بشكل صحيح");
-          return;
-          }
-          const product = products.find(p => p.size === size && p.flavor === flavor);
-          if (!product) {
-          alert("هذا المنتج غير موجود في المخزون");
-          return;
-          }
-          if (product.qty < saleQty) {
-          alert("كمية غير كافية في المخزون");
-          return;
-          }
-          product.qty -= saleQty;
-          const totalSale = saleQty * product.cartonSellPrice;
-          const totalCost = saleQty * product.cartonCost;
-          const profit = totalSale - totalCost;
-          sales.push({ size, flavor, qty: saleQty, totalSale: totalSale.toFixed(2), profit: profit.toFixed(2) });
-          document.getElementById('saleQty').value = '';
-          alert('تم تسجيل البيع بنجاح!');
-          saveAll();
-          }
-          
-          // حذف منتج
-          function deleteProduct(index) {
-          if (confirm("هل تريد حذف هذا المنتج؟ سيتم حذف كل الكمية منه.")) {
-          products.splice(index, 1);
-          saveAll();
-          }
-          }
-          
-          // حذف عملية بيع وإرجاع الكمية للمخزون
-          function deleteSale(index) {
-          if (confirm("هل تريد حذف عملية البيع؟ سيتم إعادة الكمية إلى المخزون.")) {
-          const sale = sales[index];
-          const product = products.find(p => p.size === sale.size && p.flavor === sale.flavor);
-          if (product) product.qty += sale.qty;
-          else products.push({ size: sale.size, flavor: sale.flavor, qty: sale.qty, cartonCost: 0, cartonSellPrice: 0 });
-          sales.splice(index, 1);
-          saveAll();
-          }
-          }
-          
-          // تحديث الجداول
-          function renderTables() {
-          const productTbody = document.querySelector('#productTable tbody');
-          productTbody.innerHTML = '';
-          products.forEach((p, i) => {
-          productTbody.innerHTML += `<tr>
-          <td>${p.size}</td>
-          <td>${p.flavor}</td>
-          <td>${p.qty}</td>
-          <td>${p.cartonCost.toFixed(2)}</td>
-          <td>${p.cartonSellPrice.toFixed(2)}</td>
-          <td><button class="delete-btn" aria-label="حذف المنتج ${p.size} ${p.flavor}" onclick="deleteProduct(${i})">حذف</button></td>
-          </tr>`;
-          });
-          
-          const salesTbody = document.querySelector('#salesTable tbody');
-          salesTbody.innerHTML = '';
-          sales.forEach((s, i) => {
-          salesTbody.innerHTML += `<tr>
-          <td>${s.size}</td>
-          <td>${s.flavor}</td>
-          <td>${s.qty}</td>
-          <td>${s.totalSale}</td>
-          <td>${s.profit}</td>
-          <td><button class="delete-btn" aria-label="حذف عملية البيع ${s.size} ${s.flavor}" onclick="deleteSale(${i})">حذف</button></td>
-          </tr>`;
-          });
-          
-          const totalProfit = sales.reduce((acc, s) => acc + parseFloat(s.profit), 0);
-          document.getElementById('profitSummary').textContent = `إجمالي الربح: ${totalProfit.toFixed(2)} $`;
-          }
-          
-          // التنقل بين الصفحات
-          const homeBtn = document.getElementById('homeBtn');
-          const sellBtn = document.getElementById('sellBtn');
-          const homePage = document.getElementById('homePage');
-          const sellPage = document.getElementById('sellPage');
-          const backHomeBtn = document.getElementById('backHomeBtn');
-          
-          function showPage(pageToShow) {
-          if (pageToShow === 'home') {
-          homePage.classList.add('active');
-          sellPage.classList.remove('active');
-          homeBtn.setAttribute('aria-selected', 'true');
-          sellBtn.setAttribute('aria-selected', 'false');
-          homePage.focus();
-          } else {
-          sellPage.classList.add('active');
-          homePage.classList.remove('active');
-          homeBtn.setAttribute('aria-selected', 'false');
-          sellBtn.setAttribute('aria-selected', 'true');
-          sellPage.focus();
-          }
-          }
-          
-          homeBtn.addEventListener('click', () => showPage('home'));
-          sellBtn.addEventListener('click', () => showPage('sell'));
-          backHomeBtn.addEventListener('click', () => showPage('home'));
-          
-          // أزرار الوظائف
-          document.getElementById('addProductBtn').addEventListener('click', addProduct);
-          document.getElementById('sellProductBtn').addEventListener('click', sellProduct);
-          
-          // دوال للحذف يجب أن تكون على window للوصول من html inline
-          window.deleteProduct = deleteProduct;
-          window.deleteSale = deleteSale;
-          
-          // تحميل الجداول عند بداية التشغيل
-          renderTables();
-          </script>
-          </body>
-          </html>
+    document.getElementById('qty').value = '';
+    document.getElementById('cartonCost').value = '';
+    document.getElementById('cartonSellPrice').value = '';
+
+    saveAll();
+}
+
+function sellProduct(){
+    const size = document.getElementById('saleSize').value;
+    const flavor = document.getElementById('saleFlavor').value;
+    const saleQty = parseInt(document.getElementById('saleQty').value);
+
+    if(!saleQty || saleQty < 1){ alert('يرجى إدخال كمية البيع بشكل صحيح'); return; }
+    const product = products.find(p => p.size === size && p.flavor === flavor);
+    if(!product){ alert('هذا المنتج غير موجود في المخزون'); return; }
+    if(product.qty < saleQty){ alert('كمية غير كافية في المخزون'); return; }
+
+    product.qty -= saleQty;
+    const totalSale = saleQty * product.cartonSellPrice;
+    const profit = totalSale - saleQty * product.cartonCost;
+    sales.push({size, flavor, qty: saleQty, totalSale: totalSale.toFixed(2), profit: profit.toFixed(2)});
+
+    document.getElementById('saleQty').value = '';
+    alert('تم البيع بنجاح!'); // رسالة التنبيه عند البيع
+    saveAll();
+}
+
+function deleteProduct(i){ products.splice(i,1); saveAll(); }
+function deleteSale(i){ const s = sales[i]; const p = products.find(p=>p.size===s.size&&p.flavor===s.flavor); if(p) p.qty += s.qty; else products.push({size:s.size, flavor:s.flavor, qty:s.qty, cartonCost:0, cartonSellPrice:0}); sales.splice(i,1); saveAll(); }
+
+function renderTables(){
+    const tbodyP = document.querySelector('#productTable tbody'); tbodyP.innerHTML='';
+    products.forEach((p,i)=>{tbodyP.innerHTML += `<tr><td>${p.size}</td><td>${p.flavor}</td><td>${p.qty}</td><td>${p.cartonCost.toFixed(2)}</td><td>${p.cartonSellPrice.toFixed(2)}</td><td><button class='delete-btn' onclick='deleteProduct(${i})'>حذف</button></td></tr>`});
+    const tbodyS = document.querySelector('#salesTable tbody'); tbodyS.innerHTML='';
+    sales.forEach((s,i)=>{tbodyS.innerHTML += `<tr><td>${s.size}</td><td>${s.flavor}</td><td>${s.qty}</td><td>${s.totalSale}</td><td>${s.profit}</td><td><button class='delete-btn' onclick='deleteSale(${i})'>حذف</button></td></tr>`});
+    const totalProfit = sales.reduce((acc,s)=>acc + parseFloat(s.profit), 0);
+    document.getElementById('profitSummary').textContent = `إجمالي الربح: ${totalProfit.toFixed(2)} $`;
+}
+
+const homeBtn = document.getElementById('homeBtn'), sellBtn = document.getElementById('sellBtn'), homePage = document.getElementById('homePage'), sellPage = document.getElementById('sellPage'), backHomeBtn = document.getElementById('backHomeBtn');
+function showPage(page){
+    if(page==='home'){ homePage.classList.remove('hidden'); sellPage.classList.add('hidden'); homeBtn.classList.add('active'); sellBtn.classList.remove('active'); }
+    else { homePage.classList.add('hidden'); sellPage.classList.remove('hidden'); homeBtn.classList.remove('active'); sellBtn.classList.add('active'); }
+}
+homeBtn.onclick=()=>showPage('home');
+sellBtn.onclick=()=>showPage('sell');
+backHomeBtn.onclick=()=>showPage('home');
+document.getElementById('addProductBtn').onclick = addProduct;
+document.getElementById('sellProductBtn').onclick = sellProduct;
+window.deleteProduct = deleteProduct;
+window.deleteSale = deleteSale;
+renderTables();
+</script></body>
+</html>
